@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import joblib
 import numpy as np
 
@@ -13,6 +14,7 @@ model = joblib.load(model_path)
 
 # Initialize Flask app
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def home():

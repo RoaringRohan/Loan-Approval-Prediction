@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loan Feature Submission</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input[type="number"] {
+      display: block;
+      margin: 5px 0;
+      padding: 5px;
+      width: 100px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 16px;
+    }
+    #response {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      background-color: #f1f1f1;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Enter 15 Loan Features</h2>
+  <form id="numberForm">
+    <div id="inputsContainer">
+      <!-- Inputs will be generated dynamically -->
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="response"></div>
+
+  <script>
+    // Generate 15 number inputs
+    const container = document.getElementById('inputsContainer');
+    for (let i = 1; i <= 15; i++) {
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.step = 'any'; // Allow decimals
+      input.name = `input${i}`;
+      input.placeholder = `Feature ${i}`;
+      container.appendChild(input);
+    }
+
+    document.getElementById('numberForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const inputs = container.querySelectorAll('input');
+      const features = [];
+
+      inputs.forEach(input => {
+        const value = parseFloat(input.value);
+        if (!isNaN(value)) {
+          features.push(value);
+        }
+      });
+
+      if (features.length !== 15) {
+        document.getElementById('response').textContent = 'Please fill in all 15 numbers.';
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:8080/predict', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ features })
+        });
+
+        const result = await response.json();
+        document.getElementById('response').textContent = 'Loan Approval Status: ' + result.loan_approval;
+      } catch (err) {
+        document.getElementById('response').textContent = 'Error: ' + err.message;
+      }
+    });
+  </script>
+
+</body>
+</html>
