@@ -33,6 +33,7 @@ const steps: Step[] = [
     field: "no_of_dependents",
     type: "number",
     placeholder: "Enter number of dependents (0-5)",
+    // Note: This will validate only if a number is provided.
     validation: (value: number) => value >= 0 && value <= 5,
     errorMessage: "Please enter a number between 0 and 5",
   },
@@ -135,14 +136,20 @@ export default function Wizard() {
   const currentStep = steps[stepIndex];
 
   const handleNext = () => {
-    const value = inputs[currentStep.field] || "";
+    // Retrieve the raw value from state.
+    const rawValue = inputs[currentStep.field] || "";
+    
     let isValid: boolean = false;
-
     if (currentStep.type === "number") {
-      const numericValue = Number(value);
+      // If the input is empty, treat it as invalid.
+      if (rawValue.trim() === "") {
+        setError(currentStep.errorMessage);
+        return;
+      }
+      const numericValue = Number(rawValue);
       isValid = currentStep.validation(numericValue);
     } else {
-      isValid = currentStep.validation(value);
+      isValid = currentStep.validation(rawValue);
     }
 
     if (!isValid) {
