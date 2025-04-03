@@ -11,6 +11,8 @@ import numpy as np
 
 model_path = "../model/random_forest_model.pkl"
 model = joblib.load(model_path)
+scaler = joblib.load("../model/scaler.pkl")
+
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -25,11 +27,10 @@ def predict():
     # Get JSON data 
     data = request.json
     
-    # Convert data to numpy array
     features = np.array(data['features']).reshape(1, -1)
-    
-    # Make prediction
-    prediction = model.predict(features)
+    features_scaled = scaler.transform(features)  # scale the input 
+    prediction = model.predict(features_scaled)
+
     
     # Return the prediction
     result = {"loan_approval": "Approved" if prediction[0] == 1 else "Rejected"}
