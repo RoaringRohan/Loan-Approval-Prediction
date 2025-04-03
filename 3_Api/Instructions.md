@@ -1,7 +1,7 @@
 # Once you are in the 3_Api folder...
 
-pip install -r requirements.txt
-
 cd api
+
+pip install -r requirements.txt
 
 python app.py
