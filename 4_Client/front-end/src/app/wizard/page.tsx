@@ -82,10 +82,10 @@ const steps: Step[] = [
     errorMessage: "Please enter a positive integer between 1 and 50",
   },
   {
-    name: "Cibil Score",
+    name: "Credit Score",
     field: "cibil_score",
     type: "number",
-    placeholder: "Enter your CIBIL score (0-900)",
+    placeholder: "Enter your Credit (CIBIL) score (0-900)",
     validation: (value: number) => value >= 0 && value <= 900,
     errorMessage: "Please enter a number between 0 and 900",
   },
@@ -227,7 +227,7 @@ export default function Wizard() {
   };
 
   return (
-    <div className="min-h-screen bg-blue-100 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen flex items-start justify-center pt-12">
       {stepIndex < steps.length && (
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
           <h2 className="text-xl font-semibold mb-4">{currentStep.name}</h2>
