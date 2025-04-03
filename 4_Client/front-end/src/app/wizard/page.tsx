@@ -1,8 +1,8 @@
-// app/wizard/page.jsx
+// src/app/wizard/page.tsx
 "use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const steps = [
   {
@@ -10,31 +10,41 @@ const steps = [
     field: "no_of_dependents",
     type: "number",
     placeholder: "Enter number of dependents (0-5)",
-    validation: (value) => value >= 0 && value <= 5,
+    validation: (value: number) => value >= 0 && value <= 5,
     errorMessage: "Please enter a number between 0 and 5",
   },
   {
     name: "Education",
     field: "education",
-    type: "text",
-    placeholder: "Enter 'graduate' or 'not graduate'",
-    validation: (value) => ["graduate", "not graduate"].includes(value.toLowerCase()),
-    errorMessage: "Please enter either 'graduate' or 'not graduate'",
+    type: "select",
+    options: ["graduate", "not graduate"],
+    placeholder: "Select your education status",
+    validation: (value: any) => {
+      return typeof value === "string" &&
+             value.trim() !== "" &&
+             ["graduate", "not graduate"].includes(value.toLowerCase());
+    },
+    errorMessage: "Please select an option",
   },
   {
     name: "Self Employed",
     field: "self_employed",
-    type: "text",
-    placeholder: "Enter 'yes' or 'no'",
-    validation: (value) => ["yes", "no"].includes(value.toLowerCase()),
-    errorMessage: "Please enter either 'yes' or 'no'",
+    type: "select",
+    options: ["yes", "no"],
+    placeholder: "Select if you are self employed",
+    validation: (value: any) => {
+      return typeof value === "string" &&
+             value.trim() !== "" &&
+             ["yes", "no"].includes(value.toLowerCase());
+    },
+    errorMessage: "Please select an option",
   },
   {
     name: "Income Annum",
     field: "income_annum",
     type: "number",
     placeholder: "Enter your annual income",
-    validation: (value) => value > 0,
+    validation: (value: number) => value > 0,
     errorMessage: "Please enter a positive integer",
   },
   {
@@ -42,7 +52,7 @@ const steps = [
     field: "loan_amount",
     type: "number",
     placeholder: "Enter the loan amount",
-    validation: (value) => value > 0,
+    validation: (value: number) => value > 0,
     errorMessage: "Please enter a positive integer",
   },
   {
@@ -50,7 +60,7 @@ const steps = [
     field: "loan_term",
     type: "number",
     placeholder: "Enter loan term in years (1-20)",
-    validation: (value) => value > 0 && value <= 20,
+    validation: (value: number) => value > 0 && value <= 20,
     errorMessage: "Please enter a positive integer between 1 and 20",
   },
   {
@@ -58,7 +68,7 @@ const steps = [
     field: "cibil_score",
     type: "number",
     placeholder: "Enter your CIBIL score (0-900)",
-    validation: (value) => value >= 0 && value <= 900,
+    validation: (value: number) => value >= 0 && value <= 900,
     errorMessage: "Please enter a number between 0 and 900",
   },
   {
@@ -66,7 +76,7 @@ const steps = [
     field: "residential_assets_value",
     type: "number",
     placeholder: "Enter residential assets value (can be negative)",
-    validation: (value) => true, // any number is allowed
+    validation: (_: number) => true,
     errorMessage: "",
   },
   {
@@ -74,7 +84,7 @@ const steps = [
     field: "commercial_assets_value",
     type: "number",
     placeholder: "Enter commercial assets value (non-negative)",
-    validation: (value) => value >= 0,
+    validation: (value: number) => value >= 0,
     errorMessage: "Please enter a non-negative integer",
   },
   {
@@ -82,7 +92,7 @@ const steps = [
     field: "luxury_assets_value",
     type: "number",
     placeholder: "Enter luxury assets value (non-negative)",
-    validation: (value) => value >= 0,
+    validation: (value: number) => value >= 0,
     errorMessage: "Please enter a non-negative integer",
   },
   {
@@ -90,25 +100,26 @@ const steps = [
     field: "bank_asset_value",
     type: "number",
     placeholder: "Enter bank asset value (non-negative)",
-    validation: (value) => value >= 0,
+    validation: (value: number) => value >= 0,
     errorMessage: "Please enter a non-negative integer",
   },
 ];
 
 export default function Wizard() {
   const [step, setStep] = useState(0);
-  const [inputs, setInputs] = useState({});
+  const [inputs, setInputs] = useState<Record<string, any>>({});
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<string | null>(null);
   const router = useRouter();
 
   const handleNext = () => {
     const currentStep = steps[step];
     const value = inputs[currentStep.field];
     // For number inputs, convert to Number before validating
-    const numericValue = currentStep.type === "number" ? Number(value) : value;
-    if (!currentStep.validation(numericValue)) {
+    const validatedValue =
+      currentStep.type === "number" ? Number(value) : value;
+    if (!currentStep.validation(validatedValue)) {
       setError(currentStep.errorMessage);
       return;
     }
@@ -116,7 +127,9 @@ export default function Wizard() {
     setStep(step + 1);
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setInputs({ ...inputs, [steps[step].field]: e.target.value });
   };
 
@@ -128,10 +141,12 @@ export default function Wizard() {
       Number(inputs.luxury_assets_value) +
       Number(inputs.bank_asset_value);
 
-    const computedDebtToIncome = Number(inputs.loan_amount) / (Number(inputs.income_annum) + 1);
-    const computedLoanToAssets = Number(inputs.loan_amount) / (computedTotalAssets + 1);
+    const computedDebtToIncome =
+      Number(inputs.loan_amount) / (Number(inputs.income_annum) + 1);
+    const computedLoanToAssets =
+      Number(inputs.loan_amount) / (computedTotalAssets + 1);
 
-    // Compute cibil bucket based on the cibil_score
+    // Compute cibil bucket
     let bucket;
     const cibilScore = Number(inputs.cibil_score);
     if (cibilScore <= 500) bucket = 0;
@@ -139,10 +154,12 @@ export default function Wizard() {
     else bucket = 2;
 
     // Convert education and self_employed to binary values
-    const educationBinary = inputs.education.toLowerCase() === "graduate" ? 1 : 0;
-    const selfEmployedBinary = inputs.self_employed.toLowerCase() === "yes" ? 1 : 0;
+    const educationBinary =
+      inputs.education.toLowerCase() === "graduate" ? 1 : 0;
+    const selfEmployedBinary =
+      inputs.self_employed.toLowerCase() === "yes" ? 1 : 0;
 
-    // Build the features array in the expected order:
+    // Build the features array in the expected order
     const features = [
       Number(inputs.no_of_dependents),
       educationBinary,
@@ -161,21 +178,19 @@ export default function Wizard() {
       bucket,
     ];
 
-    // Call your API endpoint
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8080/predict', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8080/predict", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ features }),
       });
       const data = await response.json();
       setResult(data.loan_approval);
-      // Move to the results step
       setStep(step + 1);
-    } catch (err) {
+    } catch (err: any) {
       setError("Error: " + err.message);
     }
     setLoading(false);
@@ -184,22 +199,49 @@ export default function Wizard() {
   const currentStepObj = steps[step];
 
   return (
-    <div className="min-h-screen bg-ocean-light flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-blue-100 flex flex-col items-center justify-center p-4">
       {step < steps.length && (
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-          <h2 className="text-xl font-semibold mb-4">{currentStepObj.name}</h2>
-          <input
-            type={currentStepObj.type}
-            placeholder={currentStepObj.placeholder}
-            value={inputs[currentStepObj.field] || ""}
-            onChange={handleInputChange}
-            className="w-full border border-gray-300 rounded p-2 mb-4"
-          />
+          <h2 className="text-xl font-semibold mb-4">
+            {currentStepObj.name}
+          </h2>
+          {currentStepObj.type === "select" ? (
+            <select
+              value={inputs[currentStepObj.field] || ""}
+              onChange={handleInputChange}
+              className="w-full border border-gray-300 rounded p-2 mb-4"
+            >
+              <option value="">{currentStepObj.placeholder}</option>
+              {currentStepObj.options.map((option, index) => (
+                <option key={index} value={option}>
+                  {option.charAt(0).toUpperCase() + option.slice(1)}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input
+              type={currentStepObj.type}
+              placeholder={currentStepObj.placeholder}
+              value={inputs[currentStepObj.field] || ""}
+              onChange={handleInputChange}
+              className="w-full border border-gray-300 rounded p-2 mb-4"
+            />
+          )}
           {error && <p className="text-red-500 mb-4">{error}</p>}
-          <div className="flex justify-end">
+          <div className="flex justify-between">
+            {step > 0 && (
+              <button
+                onClick={() => setStep(step - 1)}
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+              >
+                Back
+              </button>
+            )}
             <button
               onClick={handleNext}
-              className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+              className={`bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 ${
+                step === 0 ? "ml-auto" : ""
+              }`}
             >
               Next
             </button>
@@ -210,8 +252,9 @@ export default function Wizard() {
       {step === steps.length && (
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
           <h2 className="text-xl font-semibold mb-4">Review & Submit</h2>
-          <p className="mb-4">Please review your inputs and submit your loan request.</p>
-          {/* (Optional) You could list the entered values here */}
+          <p className="mb-4">
+            Please review your inputs and submit your loan request.
+          </p>
           <div className="flex justify-between">
             <button
               onClick={() => setStep(step - 1)}
@@ -233,15 +276,17 @@ export default function Wizard() {
 
       {step === steps.length + 1 && (
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md text-center">
-          <h2 className="text-xl font-semibold mb-4">Loan Approval Result</h2>
+          <h2 className="text-xl font-semibold mb-4">
+            Loan Approval Result
+          </h2>
           {result ? (
             <p className="text-2xl">{result}</p>
           ) : (
             <p className="text-2xl text-red-500">No result found.</p>
           )}
           <button
-            onClick={() => router.push('/')}
-            className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+            onClick={() => router.push("/")}
+            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
           >
             Back to Home
           </button>
