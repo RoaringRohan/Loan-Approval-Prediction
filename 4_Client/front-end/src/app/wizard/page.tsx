@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 const steps = [
   {
-    name: "No of Dependents",
+    name: "No. of Dependents",
     field: "no_of_dependents",
     type: "number",
     placeholder: "Enter number of dependents (0-5)",
@@ -59,9 +59,9 @@ const steps = [
     name: "Loan Term",
     field: "loan_term",
     type: "number",
-    placeholder: "Enter loan term in years (1-20)",
-    validation: (value: number) => value > 0 && value <= 20,
-    errorMessage: "Please enter a positive integer between 1 and 20",
+    placeholder: "Enter loan term in years (1-50)",
+    validation: (value: number) => value > 0 && value <= 50,
+    errorMessage: "Please enter a positive integer between 1 and 50",
   },
   {
     name: "Cibil Score",
