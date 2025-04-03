@@ -206,7 +206,7 @@ export default function Wizard() {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:8080/predict", {
+      const response = await fetch("https://cs4442b-project.onrender.com/predict", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
