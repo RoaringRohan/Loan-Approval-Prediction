@@ -11,8 +11,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body style={{ backgroundColor: "#ffffff" }} className="min-h-screen overflow-hidden">
         <header className="p-4 flex justify-between items-center">
-          <div className="text-lg font-bold">CS 4442B Project</div>
-          <div className="text-lg font-semibold">Rohan Datta, Hamza Kamran</div>
+          <div className="text-lg font-bold text-black-700">CS 4442B Project</div>
+          <div className="text-lg font-semibold text-black-700">Rohan Datta, Hamza Kamran</div>
         </header>
         <section className="flex justify-center mt-4">
           <div className="bg-white rounded-lg shadow-md p-6 max-w-2xl text-center">

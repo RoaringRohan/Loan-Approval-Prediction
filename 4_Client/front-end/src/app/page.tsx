@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex items-start justify-center pt-12">
       <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-center mb-6">
+        <h1 className="text-3xl font-bold text-center mb-6 text-black-700">
           Loan Approval Prediction
         </h1>
         <Link href="/wizard">

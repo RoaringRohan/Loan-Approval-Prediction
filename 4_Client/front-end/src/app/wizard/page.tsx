@@ -237,7 +237,7 @@ export default function Wizard() {
     <div className="min-h-screen flex items-start justify-center pt-12">
       {stepIndex < steps.length && (
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-          <h2 className="text-xl font-semibold mb-4">{currentStep.name}</h2>
+          <h2 className="text-xl font-semibold mb-4 text-black-700">{currentStep.name}</h2>
           {currentStep.type === "select" ? (
             <select
               value={inputs[currentStep.field] || ""}
