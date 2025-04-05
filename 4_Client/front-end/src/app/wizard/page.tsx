@@ -1,10 +1,10 @@
-// src/app/wizard/page.tsx
+
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-// Define types for steps
+
 
 interface NumberStep {
   name: string;
@@ -33,7 +33,6 @@ const steps: Step[] = [
     field: "no_of_dependents",
     type: "number",
     placeholder: "Enter number of dependents (0-5)",
-    // Note: This will validate only if a number is provided.
     validation: (value: number) => value >= 0 && value <= 5,
     errorMessage: "Please enter a number between 0 and 5",
   },

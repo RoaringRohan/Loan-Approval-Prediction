@@ -3,11 +3,6 @@ from flask_cors import CORS
 import joblib
 import numpy as np
 
-# Expected order of features:
-# [no_of_dependents, education, self_employed, income_annum, loan_amount,
-#  loan_term, cibil_score, residential_assets_value, commercial_assets_value,
-#  luxury_assets_value, bank_asset_value, total_assets, debt_to_income,
-#  loan_to_assets, cibil_bucket]
 
 model_path = "../model/random_forest_model.pkl"
 model = joblib.load(model_path)
