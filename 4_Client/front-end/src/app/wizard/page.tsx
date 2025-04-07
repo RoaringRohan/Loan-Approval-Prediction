@@ -301,7 +301,7 @@ export default function Wizard() {
               Submit
             </button>
           </div>
-          {loading && <p className="mt-2">Submitting...</p>}
+          {loading && <p className="mt-2">Submitting...Please allow up to 1 minute to load the result.</p>}
           {error && <p className="mt-2 text-red-500">{error}</p>}
         </div>
       )}
