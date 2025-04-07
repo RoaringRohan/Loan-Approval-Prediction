@@ -134,12 +134,10 @@ export default function Wizard() {
   const currentStep = steps[stepIndex];
 
   const handleNext = () => {
-    // Retrieve the raw value from state.
     const rawValue = inputs[currentStep.field] || "";
     
     let isValid: boolean = false;
     if (currentStep.type === "number") {
-      // If the input is empty, treat it as invalid.
       if (rawValue.trim() === "") {
         setError(currentStep.errorMessage);
         return;
@@ -165,7 +163,6 @@ export default function Wizard() {
   };
 
   const handleSubmit = async () => {
-    // Compute computed fields
     const computedTotalAssets =
       Number(inputs["residential_assets_value"]) +
       Number(inputs["commercial_assets_value"]) +
@@ -177,20 +174,17 @@ export default function Wizard() {
     const computedLoanToAssets =
       Number(inputs["loan_amount"]) / (computedTotalAssets + 1);
 
-    // Compute cibil bucket
     let bucket: number;
     const cibilScore = Number(inputs["cibil_score"]);
     if (cibilScore <= 500) bucket = 0;
     else if (cibilScore <= 700) bucket = 1;
     else bucket = 2;
 
-    // Convert education and self_employed to binary values
     const educationBinary =
       inputs["education"].toLowerCase() === "graduate" ? 1 : 0;
     const selfEmployedBinary =
       inputs["self_employed"].toLowerCase() === "yes" ? 1 : 0;
 
-    // Build the features array in the expected order
     const features = [
       Number(inputs["no_of_dependents"]),
       educationBinary,
