@@ -125,7 +125,6 @@ const steps: Step[] = [
 
 export default function Wizard() {
   const [stepIndex, setStepIndex] = useState(0);
-  // We'll store all inputs as strings
   const [inputs, setInputs] = useState<Record<string, string>>({});
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
